@@ -1,6 +1,6 @@
 # 🛡️ Insurance Samjho (Health Insurance Check Karo)
 
-**Hacktoberfest 2026 - Week 2 (Side Hustle) & "Best Use of Gemma" Submission**
+**Hacktoberfest 2026 - Week 2 (Side Hustle) Submission**
 
 Insurance Samjho is a privacy-first, local-AI web application that reads dense health insurance policies and instantly generates an "Out-of-Pocket Map." It tells users exactly when they are covered and when they will have to pay from their own pocket—without ever sending highly sensitive financial and medical documents to closed-source cloud providers.
 
