@@ -79,6 +79,9 @@ const UI_HI = {
   "We don't store or share your data.": "हम आपका डेटा न स्टोर करते हैं और न साझा करते हैं।",
   "Exact-Quote Evidence": "सटीक उद्धरण प्रमाण",
   "Every claim links to the policy text.": "हर दावा पॉलिसी के पाठ से जुड़ा है।",
+  "Find this tool helpful? 🚀": "यह टूल काम का लगा? 🚀",
+  "Running Insurance Samjho's Gemma-2 backend on Modal costs real GPU money. If this saved you time parsing a tricky policy, consider helping keep the online architecture running!": "Modal पर Insurance Samjho का Gemma-2 बैकएंड चलाने में असली GPU खर्च आता है। अगर इसने किसी जटिल पॉलिसी को समझने में आपका समय बचाया, तो ऑनलाइन सुविधा चालू रखने में मदद करें!",
+  "☕ Buy me a coffee": "☕ मुझे एक कॉफ़ी पिलाएँ",
 };
 
 export const tr = (s, lang) => (lang === "hi" ? UI_HI[s] || s : s);
