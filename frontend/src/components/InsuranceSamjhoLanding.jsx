@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { tr, useLanguage } from "../LanguageContext.jsx";
+import { API_BASE_URL } from "../config.js";
 import {
   AlertCircle,
   CheckCircle2,
@@ -11,7 +12,6 @@ import {
   Terminal,
 } from "lucide-react";
 
-const UPLOAD_URL = "http://localhost:8080/api/policy/upload";
 const HEALTH_URL = "http://localhost:8001/health/local-models";
 
 const STEPS = [
@@ -143,7 +143,7 @@ export default function InsuranceSamjhoLanding({ onUploaded }) {
     try {
       const body = new FormData();
       body.append("file", file);
-      const res = await fetch(`${UPLOAD_URL}?mode=${mode}`, { method: "POST", body });
+      const res = await fetch(`${API_BASE_URL}/api/policy/upload?mode=${mode}`, { method: "POST", body });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.documentId) {
         throw new Error(data.error || `Upload failed (${res.status})`);
