@@ -31,6 +31,7 @@ app.add_middleware(
     allow_origin_regex=r"https://[a-z0-9-]+\.vercel\.app",
     allow_methods=["GET"],
     allow_headers=["*"],
+    allow_private_network=True,
 )
 
 LOCAL_MODELS = {
