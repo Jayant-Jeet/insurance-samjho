@@ -4,9 +4,20 @@ import httpx
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-from .llm import extract_policy
+from urllib.parse import urlsplit
+
+from .llm import LOCAL_TRANSLATE_URL, LOCAL_VLLM_URL, extract_policy
 from .pdf_utils import build_prompt_text, extract_pages
 from .verify import verify_evidence
+
+
+def _origin(url: str) -> str:
+    parts = urlsplit(url)
+    return f"{parts.scheme}://{parts.netloc}"
+
+
+_VLLM_ORIGIN = _origin(LOCAL_VLLM_URL)
+_TRANSLATE_ORIGIN = _origin(LOCAL_TRANSLATE_URL)
 
 app = FastAPI(title="Insurance Samjho ML Service")
 app.add_middleware(
@@ -25,13 +36,13 @@ app.add_middleware(
 LOCAL_MODELS = {
     "gemma": {
         "name": "google/gemma-2-9b-it",
-        "port": 8000,
-        "urls": ["http://localhost:8000/health", "http://localhost:8000/v1/models"],
+        "port": urlsplit(LOCAL_VLLM_URL).port or 8000,
+        "urls": [f"{_VLLM_ORIGIN}/health", f"{_VLLM_ORIGIN}/v1/models"],
     },
     "indictrans": {
         "name": "ai4bharat/indictrans2-en-indic-1B",
-        "port": 8002,
-        "urls": ["http://localhost:8002/health"],
+        "port": urlsplit(LOCAL_TRANSLATE_URL).port or 8002,
+        "urls": [f"{_TRANSLATE_ORIGIN}/health"],
     },
 }
 

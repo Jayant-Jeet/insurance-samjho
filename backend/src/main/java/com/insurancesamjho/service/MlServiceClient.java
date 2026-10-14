@@ -20,7 +20,7 @@ public class MlServiceClient {
 
     public MlServiceClient(
             WebClient.Builder builder,
-            @Value("${ml.service.base-url}") String baseUrl,
+            @Value("${ml.service.url:http://localhost:8001}") String baseUrl,
             @Value("${ml.service.timeout-seconds}") long timeoutSeconds) {
         this.webClient = builder
                 .baseUrl(baseUrl)
