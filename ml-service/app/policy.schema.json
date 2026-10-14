@@ -1,0 +1,2642 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/health-insurance-check-karo/policy.schema.json",
+  "title": "Health Insurance Check Karo - policy extraction",
+  "description": "Output of the local pipeline for one uploaded health-insurance policy file. Rules: (1) every found fact carries evidence (page, clause, verbatim quote); (2) missing facts are 'not_mentioned', never guessed; (3) dates and arithmetic are computed by code; (4) general advice and illustrative numbers are labelled and kept apart from policy facts.",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "$ref": "#/$defs/Meta"
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Segment"
+      },
+      "minItems": 1
+    },
+    "policy": {
+      "$ref": "#/$defs/PolicyIdentity"
+    },
+    "policyholder": {
+      "$ref": "#/$defs/Person"
+    },
+    "insured_persons": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/InsuredPerson"
+      },
+      "minItems": 1
+    },
+    "coverage": {
+      "$ref": "#/$defs/Coverage"
+    },
+    "waiting_periods": {
+      "$ref": "#/$defs/WaitingPeriods"
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Exclusion"
+      }
+    },
+    "financial_terms": {
+      "$ref": "#/$defs/FinancialTerms"
+    },
+    "premium": {
+      "$ref": "#/$defs/Premium"
+    },
+    "claims": {
+      "$ref": "#/$defs/Claims"
+    },
+    "conditions": {
+      "$ref": "#/$defs/Conditions"
+    },
+    "grievance": {
+      "$ref": "#/$defs/Grievance"
+    },
+    "tax_certificate": {
+      "$ref": "#/$defs/TaxCertificate"
+    },
+    "health_card": {
+      "$ref": "#/$defs/HealthCard"
+    },
+    "derived": {
+      "$ref": "#/$defs/Derived"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Finding"
+      }
+    },
+    "out_of_pocket_map": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/OutOfPocketCard"
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "segments",
+    "policy",
+    "insured_persons",
+    "coverage",
+    "waiting_periods",
+    "exclusions",
+    "financial_terms",
+    "premium",
+    "claims",
+    "conditions",
+    "derived",
+    "findings",
+    "out_of_pocket_map"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "FieldStatus": {
+      "enum": [
+        "found",
+        "not_mentioned",
+        "ambiguous",
+        "not_applicable"
+      ],
+      "description": "found = stated in the document (evidence required). not_mentioned = looked for, absent: show 'not mentioned', never guess. ambiguous = conflicting or unclear text. not_applicable = does not apply to this product."
+    },
+    "Confidence": {
+      "enum": [
+        "high",
+        "medium",
+        "verify"
+      ],
+      "description": "'verify' makes the UI show a 'check with your insurer' badge."
+    },
+    "Method": {
+      "enum": [
+        "rule",
+        "table",
+        "llm",
+        "computed",
+        "manual"
+      ]
+    },
+    "Origin": {
+      "enum": [
+        "document",
+        "computed",
+        "general_guidance"
+      ],
+      "description": "Keeps facts from the policy apart from calculations and generic advice."
+    },
+    "Money": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "currency": {
+          "enum": [
+            "INR",
+            "USD",
+            "EUR",
+            "GBP"
+          ],
+          "default": "INR"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "amount"
+      ]
+    },
+    "Date": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 (YYYY-MM-DD). Normalise DD/MM/YYYY from the source."
+    },
+    "LocalizedText": {
+      "type": "object",
+      "properties": {
+        "en": {
+          "type": "string"
+        },
+        "hi": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "en"
+      ],
+      "description": "Plain-language text. 'hi' is optional (Hindi)."
+    },
+    "Evidence": {
+      "type": "object",
+      "properties": {
+        "segment_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.\\-]+$",
+          "maxLength": 80
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "clause": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Clause or code as printed, e.g. 'C.2.k', 'B-1.5', 'Excl04'."
+        },
+        "quote": {
+          "type": "string",
+          "maxLength": 400,
+          "description": "Exact source text (verbatim, short)."
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "page",
+        "quote"
+      ],
+      "description": "Where a fact comes from. The UI links every claim back to this."
+    },
+    "SourcedString": {
+      "type": "object",
+      "description": "Text value with status and evidence.",
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/FieldStatus"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "method": {
+          "$ref": "#/$defs/Method"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "found"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "value",
+              "evidence"
+            ],
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SourcedInteger": {
+      "type": "object",
+      "description": "Whole number with status and evidence.",
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/FieldStatus"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "method": {
+          "$ref": "#/$defs/Method"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "found"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "value",
+              "evidence"
+            ],
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SourcedNumber": {
+      "type": "object",
+      "description": "Number with status and evidence.",
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/FieldStatus"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "method": {
+          "$ref": "#/$defs/Method"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "found"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "value",
+              "evidence"
+            ],
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SourcedPercent": {
+      "type": "object",
+      "description": "Percentage (50 means 50%).",
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/FieldStatus"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "method": {
+          "$ref": "#/$defs/Method"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "found"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "value",
+              "evidence"
+            ],
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SourcedBoolean": {
+      "type": "object",
+      "description": "True/false with status and evidence.",
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/FieldStatus"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "method": {
+          "$ref": "#/$defs/Method"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "found"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "value",
+              "evidence"
+            ],
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SourcedDate": {
+      "type": "object",
+      "description": "Date with status and evidence.",
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/FieldStatus"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "method": {
+          "$ref": "#/$defs/Method"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "found"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "value",
+              "evidence"
+            ],
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SourcedMoney": {
+      "type": "object",
+      "description": "Rupee amount with status and evidence.",
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/FieldStatus"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Money"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "method": {
+          "$ref": "#/$defs/Method"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "found"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "value",
+              "evidence"
+            ],
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SourcedUrl": {
+      "type": "object",
+      "description": "URL with status and evidence.",
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/FieldStatus"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "method": {
+          "$ref": "#/$defs/Method"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "found"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "value",
+              "evidence"
+            ],
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SourcedStringList": {
+      "type": "object",
+      "description": "List of strings with status and evidence.",
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/FieldStatus"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "method": {
+          "$ref": "#/$defs/Method"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "found"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "value",
+              "evidence"
+            ],
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ComputedDate": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "formula": {
+          "type": "string",
+          "description": "Human-readable rule, e.g. 'first_policy_inception + 60 months'."
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "JSON Pointer to the input fields."
+          }
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "formula"
+      ],
+      "description": "A date calculated by code, never by the model. Always shown as 'approx. - verify'."
+    },
+    "SegmentType": {
+      "enum": [
+        "cover_letter",
+        "tax_certificate_80d",
+        "policy_schedule",
+        "schedule_of_benefits",
+        "product_information_sheet",
+        "addon_information_sheet",
+        "health_card",
+        "policy_wording",
+        "boilerplate",
+        "other"
+      ]
+    },
+    "Segment": {
+      "type": "object",
+      "properties": {
+        "segment_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.\\-]+$",
+          "maxLength": 80
+        },
+        "type": {
+          "$ref": "#/$defs/SegmentType"
+        },
+        "page_start": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "page_end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "product_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "For product/add-on sheets: which product it describes."
+        },
+        "text_layer": {
+          "enum": [
+            "present",
+            "absent",
+            "partial"
+          ]
+        },
+        "ocr_used": {
+          "type": "boolean"
+        },
+        "classification_confidence": {
+          "$ref": "#/$defs/Confidence"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "segment_id",
+        "type",
+        "page_start",
+        "page_end"
+      ],
+      "description": "One logical document inside the uploaded file. Insurers bundle several into one PDF."
+    },
+    "Meta": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "file_name": {
+              "type": "string"
+            },
+            "file_type": {
+              "enum": [
+                "pdf",
+                "docx",
+                "image",
+                "other"
+              ]
+            },
+            "page_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "file_type"
+          ]
+        },
+        "output_languages": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "en",
+              "hi"
+            ]
+          },
+          "minItems": 1
+        },
+        "pipeline": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "type": "string"
+            },
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "enum": [
+                      "extraction",
+                      "explanation",
+                      "qa",
+                      "ocr",
+                      "embedding"
+                    ]
+                  },
+                  "runtime": {
+                    "type": "string",
+                    "description": "e.g. ollama, llama.cpp, webllm"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "role"
+                ]
+              }
+            },
+            "all_processing_local": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "redaction": {
+          "type": "object",
+          "properties": {
+            "applied": {
+              "type": "boolean"
+            },
+            "fields_redacted": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "applied"
+          ],
+          "description": "Personal data removed before export or sharing."
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "source",
+        "output_languages"
+      ]
+    },
+    "PolicyIdentity": {
+      "type": "object",
+      "properties": {
+        "insurer": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "product_name": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "product_uin": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "policy_number": {
+          "$ref": "#/$defs/SourcedString",
+          "x-pii": true
+        },
+        "policy_type": {
+          "type": "object",
+          "description": "Individual or floater.",
+          "properties": {
+            "status": {
+              "$ref": "#/$defs/FieldStatus"
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "individual",
+                    "family_floater",
+                    "group",
+                    "top_up",
+                    "senior_citizen",
+                    "other"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Evidence"
+              }
+            },
+            "confidence": {
+              "$ref": "#/$defs/Confidence"
+            },
+            "method": {
+              "$ref": "#/$defs/Method"
+            }
+          },
+          "required": [
+            "status"
+          ],
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "found"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "required": [
+                  "value",
+                  "evidence"
+                ],
+                "properties": {
+                  "evidence": {
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "premium_tier": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "issued_on": {
+          "$ref": "#/$defs/SourcedDate"
+        },
+        "period_from": {
+          "$ref": "#/$defs/SourcedDate"
+        },
+        "period_to": {
+          "$ref": "#/$defs/SourcedDate"
+        },
+        "is_renewal": {
+          "$ref": "#/$defs/SourcedBoolean"
+        },
+        "previous_policy_number": {
+          "$ref": "#/$defs/SourcedString",
+          "x-pii": true
+        },
+        "first_policy_inception_date": {
+          "$ref": "#/$defs/SourcedDate"
+        },
+        "premium_frequency": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "place_of_supply": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "add_on_uins": {
+          "$ref": "#/$defs/SourcedStringList"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "insurer",
+        "product_name",
+        "period_from",
+        "period_to"
+      ]
+    },
+    "Person": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.\\-]+$",
+          "maxLength": 80
+        },
+        "role": {
+          "enum": [
+            "policyholder",
+            "insured",
+            "nominee",
+            "intermediary"
+          ]
+        },
+        "name": {
+          "$ref": "#/$defs/SourcedString",
+          "x-pii": true
+        },
+        "relationship_to_policyholder": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "gender": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "date_of_birth": {
+          "$ref": "#/$defs/SourcedDate",
+          "x-pii": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "role"
+      ]
+    },
+    "SumInsured": {
+      "type": "object",
+      "properties": {
+        "structure": {
+          "type": "object",
+          "description": "Per-person limit or one shared limit.",
+          "properties": {
+            "status": {
+              "$ref": "#/$defs/FieldStatus"
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "individual",
+                    "floater"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Evidence"
+              }
+            },
+            "confidence": {
+              "$ref": "#/$defs/Confidence"
+            },
+            "method": {
+              "$ref": "#/$defs/Method"
+            }
+          },
+          "required": [
+            "status"
+          ],
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "found"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "required": [
+                  "value",
+                  "evidence"
+                ],
+                "properties": {
+                  "evidence": {
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "base": {
+          "$ref": "#/$defs/SourcedMoney"
+        },
+        "plus_benefit": {
+          "type": "object",
+          "properties": {
+            "held": {
+              "$ref": "#/$defs/SourcedBoolean"
+            },
+            "amount": {
+              "$ref": "#/$defs/SourcedMoney"
+            },
+            "rule": {
+              "$ref": "#/$defs/SourcedString"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Bonus added at renewal, e.g. 50% of base up to 100%."
+        },
+        "secure_benefit": {
+          "type": "object",
+          "properties": {
+            "held": {
+              "$ref": "#/$defs/SourcedBoolean"
+            },
+            "amount": {
+              "$ref": "#/$defs/SourcedMoney"
+            },
+            "rule": {
+              "$ref": "#/$defs/SourcedString"
+            }
+          },
+          "additionalProperties": false
+        },
+        "restore": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "object",
+              "description": "Restore type.",
+              "properties": {
+                "status": {
+                  "$ref": "#/$defs/FieldStatus"
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "none",
+                        "automatic",
+                        "unlimited",
+                        "automatic_and_unlimited"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/Evidence"
+                  }
+                },
+                "confidence": {
+                  "$ref": "#/$defs/Confidence"
+                },
+                "method": {
+                  "$ref": "#/$defs/Method"
+                }
+              },
+              "required": [
+                "status"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "status": {
+                        "const": "found"
+                      }
+                    },
+                    "required": [
+                      "status"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "value",
+                      "evidence"
+                    ],
+                    "properties": {
+                      "evidence": {
+                        "minItems": 1
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "percent_of_base": {
+              "$ref": "#/$defs/SourcedPercent"
+            },
+            "rule": {
+              "$ref": "#/$defs/SourcedString"
+            }
+          },
+          "additionalProperties": false
+        },
+        "cumulative_bonus": {
+          "type": "object",
+          "properties": {
+            "applicable": {
+              "$ref": "#/$defs/SourcedBoolean"
+            },
+            "percent_per_year": {
+              "$ref": "#/$defs/SourcedPercent"
+            },
+            "max_percent": {
+              "$ref": "#/$defs/SourcedPercent"
+            },
+            "rule": {
+              "$ref": "#/$defs/SourcedString"
+            }
+          },
+          "additionalProperties": false
+        },
+        "aggregate_deductible": {
+          "$ref": "#/$defs/SourcedMoney"
+        },
+        "per_claim_deductible": {
+          "$ref": "#/$defs/SourcedMoney"
+        },
+        "combined_cover_stated_in_document": {
+          "$ref": "#/$defs/SourcedBoolean",
+          "description": "True only if the document itself states a combined total. Never add base+bonus+restore yourself; show components and say 'depends on policy terms'."
+        },
+        "combined_cover_text": {
+          "$ref": "#/$defs/SourcedString"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "base"
+      ]
+    },
+    "InsuredPerson": {
+      "type": "object",
+      "properties": {
+        "person": {
+          "$ref": "#/$defs/Person"
+        },
+        "sum_insured": {
+          "$ref": "#/$defs/SumInsured"
+        },
+        "first_inception_date": {
+          "$ref": "#/$defs/SourcedDate"
+        },
+        "nominee": {
+          "$ref": "#/$defs/Person"
+        },
+        "special_conditions": {
+          "$ref": "#/$defs/SourcedStringList"
+        },
+        "declared_pre_existing": {
+          "$ref": "#/$defs/SourcedStringList"
+        },
+        "loadings_or_exclusions_for_person": {
+          "$ref": "#/$defs/SourcedStringList"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "person",
+        "sum_insured"
+      ]
+    },
+    "BenefitLimit": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "up_to_sum_insured",
+            "fixed_amount",
+            "percent_of_sum_insured",
+            "per_day",
+            "max_days",
+            "as_actuals",
+            "per_claim",
+            "none_stated"
+          ]
+        },
+        "amount": {
+          "$ref": "#/$defs/Money"
+        },
+        "percent": {
+          "type": "number",
+          "minimum": 0
+        },
+        "per_day_amount": {
+          "$ref": "#/$defs/Money"
+        },
+        "max_days": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_total": {
+          "$ref": "#/$defs/Money"
+        },
+        "basis_text": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ]
+    },
+    "Benefit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.\\-]+$",
+          "maxLength": 80
+        },
+        "clause_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "e.g. B-1.5"
+        },
+        "name": {
+          "type": "string"
+        },
+        "category": {
+          "enum": [
+            "hospitalization",
+            "room_rent",
+            "day_care",
+            "home_healthcare",
+            "domiciliary",
+            "ayush",
+            "pre_hospitalization",
+            "post_hospitalization",
+            "organ_donor",
+            "road_ambulance",
+            "dental",
+            "plastic_surgery",
+            "cumulative_bonus",
+            "preventive_checkup",
+            "emergency_air_ambulance",
+            "shared_room_daily_cash",
+            "non_medical_protect",
+            "sum_insured_enhancement",
+            "restore",
+            "aggregate_deductible",
+            "e_opinion",
+            "global_health",
+            "overseas_travel",
+            "critical_illness",
+            "hospital_cash",
+            "personal_accident",
+            "wellbeing",
+            "other"
+          ]
+        },
+        "availability_in_product": {
+          "enum": [
+            "base",
+            "optional",
+            "add_on",
+            "not_in_product",
+            "unknown"
+          ],
+          "description": "What the generic Know-Your-Policy sheet says the product offers."
+        },
+        "schedule_status": {
+          "enum": [
+            "held",
+            "not_held",
+            "not_listed"
+          ],
+          "description": "What YOUR schedule says. This is the one that matters."
+        },
+        "user_has": {
+          "enum": [
+            "yes",
+            "no",
+            "unclear"
+          ],
+          "description": "Computed by reconciling the two. Drives the 'You have / You don't have' grid."
+        },
+        "limit": {
+          "$ref": "#/$defs/BenefitLimit"
+        },
+        "conditions": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "plain_summary": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "category",
+        "schedule_status",
+        "user_has",
+        "evidence"
+      ]
+    },
+    "AddOn": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.\\-]+$",
+          "maxLength": 80
+        },
+        "name": {
+          "type": "string"
+        },
+        "uin": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "held": {
+          "$ref": "#/$defs/SourcedBoolean"
+        },
+        "sum_insured": {
+          "$ref": "#/$defs/SourcedMoney"
+        },
+        "plan": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "summary": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "held"
+      ]
+    },
+    "Coverage": {
+      "type": "object",
+      "properties": {
+        "benefits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Benefit"
+          }
+        },
+        "add_ons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AddOn"
+          }
+        },
+        "scope": {
+          "type": "object",
+          "properties": {
+            "territory": {
+              "$ref": "#/$defs/SourcedString"
+            },
+            "minimum_hospitalization_hours": {
+              "$ref": "#/$defs/SourcedInteger"
+            },
+            "pre_hospitalization_days": {
+              "$ref": "#/$defs/SourcedInteger"
+            },
+            "post_hospitalization_days": {
+              "$ref": "#/$defs/SourcedInteger"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "benefits"
+      ]
+    },
+    "WaitingStatus": {
+      "enum": [
+        "waived",
+        "remaining",
+        "completed",
+        "not_applicable",
+        "unknown"
+      ]
+    },
+    "WaitingPeriods": {
+      "type": "object",
+      "properties": {
+        "initial": {
+          "type": "object",
+          "properties": {
+            "days": {
+              "$ref": "#/$defs/SourcedInteger"
+            },
+            "not_applicable_on_continuous_renewal": {
+              "$ref": "#/$defs/SourcedBoolean"
+            },
+            "not_applicable_for_accidents": {
+              "$ref": "#/$defs/SourcedBoolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "specific_diseases": {
+          "type": "object",
+          "properties": {
+            "months": {
+              "$ref": "#/$defs/SourcedInteger"
+            },
+            "listed_conditions": {
+              "$ref": "#/$defs/SourcedStringList"
+            },
+            "not_applicable_for_accidents": {
+              "$ref": "#/$defs/SourcedBoolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "pre_existing": {
+          "type": "object",
+          "properties": {
+            "months": {
+              "$ref": "#/$defs/SourcedInteger"
+            },
+            "counted_from": {
+              "$ref": "#/$defs/SourcedString"
+            }
+          },
+          "additionalProperties": false
+        },
+        "per_insured_status": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "insured_id": {
+                "type": "string",
+                "pattern": "^[a-z0-9_.\\-]+$",
+                "maxLength": 80
+              },
+              "initial": {
+                "$ref": "#/$defs/WaitingStatus"
+              },
+              "specific": {
+                "$ref": "#/$defs/WaitingStatus"
+              },
+              "pre_existing": {
+                "$ref": "#/$defs/WaitingStatus"
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Evidence"
+                }
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "insured_id"
+            ]
+          },
+          "description": "What the personalised schedule says is still remaining for each person."
+        },
+        "fresh_waiting_on_enhanced_sum_insured": {
+          "$ref": "#/$defs/SourcedBoolean",
+          "description": "If the sum insured is increased, waiting periods restart on the increase only. Always show as a caveat next to 'waived'."
+        },
+        "continuity": {
+          "type": "object",
+          "properties": {
+            "renewal_continuity": {
+              "$ref": "#/$defs/SourcedBoolean"
+            },
+            "portability_benefits_present": {
+              "$ref": "#/$defs/SourcedBoolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "moratorium": {
+          "type": "object",
+          "properties": {
+            "months": {
+              "$ref": "#/$defs/SourcedInteger"
+            },
+            "summary": {
+              "$ref": "#/$defs/LocalizedText"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "per_insured_status"
+      ]
+    },
+    "Exclusion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.\\-]+$",
+          "maxLength": 80
+        },
+        "code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "e.g. Excl08"
+        },
+        "clause_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "e.g. C.1.h"
+        },
+        "kind": {
+          "enum": [
+            "general",
+            "specific",
+            "person_specific"
+          ]
+        },
+        "category": {
+          "enum": [
+            "diagnostics_only",
+            "rest_cure_custodial",
+            "obesity_surgery",
+            "gender_change",
+            "cosmetic_plastic",
+            "hazardous_sports",
+            "breach_of_law",
+            "excluded_providers",
+            "substance_abuse",
+            "spa_nature_cure",
+            "supplements",
+            "refractive_error",
+            "unproven_treatment",
+            "infertility",
+            "maternity",
+            "war_nuclear",
+            "self_harm",
+            "military_service",
+            "debility_sleep_apnoea",
+            "congenital",
+            "stem_cell",
+            "spinal_manipulation",
+            "circumcision",
+            "vaccination",
+            "non_medical_items",
+            "outpatient",
+            "hearing_vision_aids",
+            "hair_loss",
+            "devices_prosthetics",
+            "unreasonable_or_unnecessary",
+            "permanent_exclusion_for_person",
+            "other"
+          ]
+        },
+        "title": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "summary": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "exceptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "condition": {
+                "$ref": "#/$defs/LocalizedText"
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Evidence"
+                }
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "condition"
+            ]
+          },
+          "description": "Cases where the exclusion does not apply."
+        },
+        "overridden_by_benefit_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9_.\\-]+$",
+            "maxLength": 80
+          },
+          "description": "Benefits the user holds that cancel or reduce this exclusion."
+        },
+        "out_of_pocket_impact": {
+          "enum": [
+            "none",
+            "partial",
+            "full",
+            "depends"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "minItems": 1
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "category",
+        "summary",
+        "evidence"
+      ]
+    },
+    "FinancialTerms": {
+      "type": "object",
+      "properties": {
+        "room_rent": {
+          "type": "object",
+          "properties": {
+            "basis": {
+              "type": "object",
+              "description": "How room rent is limited.",
+              "properties": {
+                "status": {
+                  "$ref": "#/$defs/FieldStatus"
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "at_actuals",
+                        "per_day_cap",
+                        "percent_of_sum_insured",
+                        "room_category",
+                        "other"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/Evidence"
+                  }
+                },
+                "confidence": {
+                  "$ref": "#/$defs/Confidence"
+                },
+                "method": {
+                  "$ref": "#/$defs/Method"
+                }
+              },
+              "required": [
+                "status"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "status": {
+                        "const": "found"
+                      }
+                    },
+                    "required": [
+                      "status"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "value",
+                      "evidence"
+                    ],
+                    "properties": {
+                      "evidence": {
+                        "minItems": 1
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "cap_per_day": {
+              "$ref": "#/$defs/SourcedMoney"
+            },
+            "cap_percent_of_si": {
+              "$ref": "#/$defs/SourcedPercent"
+            },
+            "category_text": {
+              "$ref": "#/$defs/SourcedString"
+            },
+            "proportionate_deduction_applies": {
+              "$ref": "#/$defs/SourcedBoolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "co_payment": {
+          "type": "object",
+          "properties": {
+            "percent": {
+              "$ref": "#/$defs/SourcedPercent"
+            },
+            "applies_to": {
+              "$ref": "#/$defs/SourcedString"
+            },
+            "conditions": {
+              "$ref": "#/$defs/SourcedString"
+            }
+          },
+          "additionalProperties": false
+        },
+        "sub_limits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9_.\\-]+$",
+                "maxLength": 80
+              },
+              "applies_to": {
+                "type": "string"
+              },
+              "limit": {
+                "$ref": "#/$defs/BenefitLimit"
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Evidence"
+                },
+                "minItems": 1
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "applies_to",
+              "limit",
+              "evidence"
+            ]
+          }
+        },
+        "aggregate_deductible": {
+          "$ref": "#/$defs/SourcedMoney"
+        },
+        "per_claim_deductible": {
+          "$ref": "#/$defs/SourcedMoney"
+        },
+        "preventive_checkup": {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "$ref": "#/$defs/SourcedMoney"
+            },
+            "frequency": {
+              "$ref": "#/$defs/SourcedString"
+            },
+            "unavailable_if_deductible_at_least": {
+              "$ref": "#/$defs/SourcedMoney"
+            }
+          },
+          "additionalProperties": false
+        },
+        "non_medical_expenses": {
+          "type": "object",
+          "properties": {
+            "excluded_by_default": {
+              "$ref": "#/$defs/SourcedBoolean"
+            },
+            "reduced_by_protect_benefit": {
+              "$ref": "#/$defs/SourcedBoolean"
+            },
+            "annexure_ref": {
+              "$ref": "#/$defs/SourcedString"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "room_rent"
+      ]
+    },
+    "Premium": {
+      "type": "object",
+      "properties": {
+        "base_premium": {
+          "$ref": "#/$defs/SourcedMoney"
+        },
+        "optional_cover_premium": {
+          "$ref": "#/$defs/SourcedMoney"
+        },
+        "add_on_premium": {
+          "$ref": "#/$defs/SourcedMoney"
+        },
+        "loading": {
+          "$ref": "#/$defs/SourcedMoney"
+        },
+        "total_before_discount": {
+          "$ref": "#/$defs/SourcedMoney"
+        },
+        "discounts": {
+          "type": "object",
+          "properties": {
+            "aggregate_deductible": {
+              "$ref": "#/$defs/SourcedMoney"
+            },
+            "online": {
+              "$ref": "#/$defs/SourcedMoney"
+            },
+            "employee": {
+              "$ref": "#/$defs/SourcedMoney"
+            },
+            "loyalty": {
+              "$ref": "#/$defs/SourcedMoney"
+            },
+            "family": {
+              "$ref": "#/$defs/SourcedMoney"
+            },
+            "long_term": {
+              "$ref": "#/$defs/SourcedMoney"
+            },
+            "total": {
+              "$ref": "#/$defs/SourcedMoney"
+            }
+          },
+          "additionalProperties": false
+        },
+        "total_payable": {
+          "$ref": "#/$defs/SourcedMoney"
+        },
+        "amount_on_tax_certificate": {
+          "$ref": "#/$defs/SourcedMoney"
+        },
+        "tax_note": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "payment_mode": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "arithmetic_check": {
+          "type": "object",
+          "properties": {
+            "consistent": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "expected_total": {
+              "$ref": "#/$defs/Money"
+            },
+            "stated_total": {
+              "$ref": "#/$defs/Money"
+            },
+            "difference": {
+              "$ref": "#/$defs/Money"
+            },
+            "origin": {
+              "const": "computed"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Computed by code from the fields above, not by the model."
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "total_payable"
+      ]
+    },
+    "Claims": {
+      "type": "object",
+      "properties": {
+        "cashless": {
+          "type": "object",
+          "properties": {
+            "preauth_decision_hours": {
+              "$ref": "#/$defs/SourcedInteger"
+            },
+            "final_bill_decision_hours": {
+              "$ref": "#/$defs/SourcedInteger"
+            },
+            "network_list_url": {
+              "$ref": "#/$defs/SourcedUrl"
+            },
+            "excluded_hospitals_list_url": {
+              "$ref": "#/$defs/SourcedUrl"
+            },
+            "card_required_at_admission": {
+              "$ref": "#/$defs/SourcedBoolean"
+            },
+            "card_guarantees_cashless": {
+              "$ref": "#/$defs/SourcedBoolean"
+            },
+            "intimation_rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "situation": {
+                    "enum": [
+                      "planned",
+                      "emergency",
+                      "other"
+                    ]
+                  },
+                  "rule": {
+                    "$ref": "#/$defs/SourcedString"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "situation",
+                  "rule"
+                ]
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "reimbursement": {
+          "type": "object",
+          "properties": {
+            "settlement_days_after_last_document": {
+              "$ref": "#/$defs/SourcedInteger"
+            },
+            "extended_days_if_verification": {
+              "$ref": "#/$defs/SourcedInteger"
+            },
+            "claim_form_url": {
+              "$ref": "#/$defs/SourcedUrl"
+            },
+            "documents_required": {
+              "$ref": "#/$defs/SourcedStringList"
+            }
+          },
+          "additionalProperties": false
+        },
+        "outside_india": {
+          "type": "object",
+          "properties": {
+            "cover_available": {
+              "$ref": "#/$defs/SourcedBoolean"
+            },
+            "claims_contact": {
+              "$ref": "#/$defs/SourcedString"
+            },
+            "claims_email": {
+              "$ref": "#/$defs/SourcedString"
+            },
+            "per_claim_deductible": {
+              "$ref": "#/$defs/SourcedMoney"
+            }
+          },
+          "additionalProperties": false
+        },
+        "contacts": {
+          "type": "object",
+          "properties": {
+            "helplines": {
+              "$ref": "#/$defs/SourcedStringList"
+            },
+            "claims_email": {
+              "$ref": "#/$defs/SourcedString"
+            },
+            "claims_processing_address": {
+              "$ref": "#/$defs/SourcedString"
+            },
+            "policy_servicing_url": {
+              "$ref": "#/$defs/SourcedUrl"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "cashless",
+        "reimbursement"
+      ]
+    },
+    "Conditions": {
+      "type": "object",
+      "properties": {
+        "free_look": {
+          "type": "object",
+          "properties": {
+            "days": {
+              "$ref": "#/$defs/SourcedInteger"
+            },
+            "applies_to_renewals": {
+              "$ref": "#/$defs/SourcedBoolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "renewal": {
+          "type": "object",
+          "properties": {
+            "guaranteed_except_fraud": {
+              "$ref": "#/$defs/SourcedBoolean"
+            },
+            "grace_period_days": {
+              "$ref": "#/$defs/SourcedInteger"
+            }
+          },
+          "additionalProperties": false
+        },
+        "migration": {
+          "type": "object",
+          "properties": {
+            "apply_at_least_days_before_renewal": {
+              "$ref": "#/$defs/SourcedInteger"
+            }
+          },
+          "additionalProperties": false
+        },
+        "portability": {
+          "type": "object",
+          "properties": {
+            "earliest_days_before_renewal": {
+              "$ref": "#/$defs/SourcedInteger"
+            },
+            "latest_days_before_renewal": {
+              "$ref": "#/$defs/SourcedInteger"
+            }
+          },
+          "additionalProperties": false
+        },
+        "sum_insured_changes": {
+          "type": "object",
+          "properties": {
+            "only_at_renewal": {
+              "$ref": "#/$defs/SourcedBoolean"
+            },
+            "subject_to_underwriting": {
+              "$ref": "#/$defs/SourcedBoolean"
+            },
+            "fresh_waiting_on_increase": {
+              "$ref": "#/$defs/SourcedBoolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "disclosure_obligation": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "premium_non_realisation_voids_policy": {
+          "$ref": "#/$defs/SourcedBoolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Grievance": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "phone": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "grievance_officer_email": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "senior_citizen_email": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "senior_citizen_phone": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "ombudsman_url": {
+          "$ref": "#/$defs/SourcedUrl"
+        },
+        "grievance_page_url": {
+          "$ref": "#/$defs/SourcedUrl"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TaxCertificate": {
+      "type": "object",
+      "properties": {
+        "section": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "amount": {
+          "$ref": "#/$defs/SourcedMoney"
+        },
+        "period_from": {
+          "$ref": "#/$defs/SourcedDate"
+        },
+        "period_to": {
+          "$ref": "#/$defs/SourcedDate"
+        },
+        "per_insured_premium": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "insured_id": {
+                "type": "string",
+                "pattern": "^[a-z0-9_.\\-]+$",
+                "maxLength": 80
+              },
+              "premium": {
+                "$ref": "#/$defs/SourcedMoney"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "insured_id"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "HealthCard": {
+      "type": "object",
+      "properties": {
+        "present": {
+          "type": "boolean"
+        },
+        "valid_from": {
+          "$ref": "#/$defs/SourcedDate"
+        },
+        "renewal_date_text": {
+          "$ref": "#/$defs/SourcedString"
+        },
+        "disclaimer_text": {
+          "$ref": "#/$defs/SourcedString"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Derived": {
+      "type": "object",
+      "properties": {
+        "as_of_date": {
+          "$ref": "#/$defs/Date"
+        },
+        "policy_end_date": {
+          "$ref": "#/$defs/ComputedDate"
+        },
+        "next_renewal_due": {
+          "$ref": "#/$defs/ComputedDate"
+        },
+        "days_to_renewal": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "portability_window_opens": {
+          "$ref": "#/$defs/ComputedDate"
+        },
+        "portability_window_closes": {
+          "$ref": "#/$defs/ComputedDate"
+        },
+        "migration_apply_by": {
+          "$ref": "#/$defs/ComputedDate"
+        },
+        "free_look_ends": {
+          "$ref": "#/$defs/ComputedDate"
+        },
+        "specific_waiting_ends": {
+          "$ref": "#/$defs/ComputedDate"
+        },
+        "pre_existing_waiting_ends": {
+          "$ref": "#/$defs/ComputedDate"
+        },
+        "moratorium_ends": {
+          "$ref": "#/$defs/ComputedDate"
+        },
+        "calendar_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "$ref": "#/$defs/LocalizedText"
+              },
+              "date": {
+                "$ref": "#/$defs/Date"
+              },
+              "kind": {
+                "enum": [
+                  "renewal",
+                  "portability",
+                  "migration",
+                  "waiting_period",
+                  "moratorium",
+                  "other"
+                ]
+              },
+              "approximate": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "title",
+              "date"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "as_of_date"
+      ]
+    },
+    "Finding": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.\\-]+$",
+          "maxLength": 80
+        },
+        "type": {
+          "enum": [
+            "inconsistency",
+            "missing_information",
+            "caveat",
+            "exclusion_overridden",
+            "high_out_of_pocket_risk",
+            "tension_between_sections",
+            "document_quality"
+          ]
+        },
+        "severity": {
+          "enum": [
+            "info",
+            "notice",
+            "warning"
+          ]
+        },
+        "title": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "detail": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "related_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "JSON Pointers into this document."
+          }
+        },
+        "suggested_question_for_insurer": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "severity",
+        "title",
+        "detail"
+      ]
+    },
+    "OutOfPocketScenario": {
+      "enum": [
+        "non_network_hospital",
+        "excluded_provider",
+        "cashless_not_approved",
+        "not_covered_at_all",
+        "covered_but_not_full_bill",
+        "limits_reduce_payout",
+        "waiting_period",
+        "emergency_or_accident"
+      ]
+    },
+    "OutOfPocketCard": {
+      "type": "object",
+      "properties": {
+        "scenario": {
+          "$ref": "#/$defs/OutOfPocketScenario"
+        },
+        "risk": {
+          "enum": [
+            "high",
+            "medium",
+            "low",
+            "none",
+            "unknown"
+          ],
+          "description": "Set by rules from the extracted fields; the model only writes the text."
+        },
+        "headline": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "explanation": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "$ref": "#/$defs/LocalizedText"
+              },
+              "impact": {
+                "enum": [
+                  "pay_first_then_claim",
+                  "not_payable",
+                  "partly_payable",
+                  "no_extra_cost",
+                  "depends"
+                ]
+              },
+              "benefit_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9_.\\-]+$",
+                  "maxLength": 80
+                }
+              },
+              "exclusion_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9_.\\-]+$",
+                  "maxLength": 80
+                }
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Evidence"
+                }
+              },
+              "origin": {
+                "$ref": "#/$defs/Origin"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "label",
+              "impact"
+            ]
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "is_illustrative": {
+              "const": true
+            },
+            "text": {
+              "$ref": "#/$defs/LocalizedText"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "is_illustrative",
+            "text"
+          ],
+          "description": "Worked examples must be flagged as illustrative, never as facts from the policy."
+        },
+        "general_guidance": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LocalizedText"
+          },
+          "description": "Advice not taken from the policy. Origin is always general_guidance."
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "scenario",
+        "risk",
+        "headline",
+        "explanation"
+      ]
+    }
+  }
+}

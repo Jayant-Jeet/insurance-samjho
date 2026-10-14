@@ -1,0 +1,39 @@
+type Query {
+    getOutOfPocketMap(documentId: ID!): [OutOfPocketCard!]!
+    getPolicyFindings(documentId: ID!): [Finding!]!
+}
+
+type OutOfPocketCard {
+    scenario: String
+    risk: String
+    headline: LocalizedText
+    explanation: LocalizedText
+    items: [CardItem]
+    confidence: String
+}
+
+type Finding {
+    id: String
+    type: String
+    severity: String
+    title: LocalizedText
+    detail: LocalizedText
+    suggestedQuestionForInsurer: LocalizedText
+}
+
+type LocalizedText {
+    en: String
+    hi: String
+}
+
+type CardItem {
+    label: LocalizedText
+    impact: String
+    evidence: [Evidence]
+}
+
+type Evidence {
+    page: Int
+    clause: String
+    quote: String
+}

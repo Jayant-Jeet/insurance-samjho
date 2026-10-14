@@ -1,0 +1,2312 @@
+{
+  "meta": {
+    "schema_version": "1.0.0",
+    "generated_at": "2026-10-13T12:00:00Z",
+    "source": {
+      "file_name": "sample_policy.pdf",
+      "file_type": "pdf",
+      "page_count": 18
+    },
+    "output_languages": [
+      "en",
+      "hi"
+    ],
+    "pipeline": {
+      "version": "0.1.0",
+      "models": [],
+      "all_processing_local": true
+    },
+    "redaction": {
+      "applied": true,
+      "fields_redacted": [
+        "name",
+        "address",
+        "date_of_birth",
+        "policy_number",
+        "nominee",
+        "intermediary",
+        "contact",
+        "email"
+      ]
+    }
+  },
+  "segments": [
+    {
+      "segment_id": "s1",
+      "type": "cover_letter",
+      "page_start": 1,
+      "page_end": 1,
+      "text_layer": "present",
+      "ocr_used": false
+    },
+    {
+      "segment_id": "s2",
+      "type": "tax_certificate_80d",
+      "page_start": 1,
+      "page_end": 1,
+      "text_layer": "present",
+      "ocr_used": false
+    },
+    {
+      "segment_id": "s3",
+      "type": "policy_schedule",
+      "page_start": 2,
+      "page_end": 3,
+      "text_layer": "present",
+      "ocr_used": false
+    },
+    {
+      "segment_id": "s4",
+      "type": "schedule_of_benefits",
+      "page_start": 4,
+      "page_end": 4,
+      "text_layer": "present",
+      "ocr_used": false
+    },
+    {
+      "segment_id": "s5",
+      "type": "health_card",
+      "page_start": 5,
+      "page_end": 5,
+      "text_layer": "present",
+      "ocr_used": false
+    },
+    {
+      "segment_id": "s6",
+      "type": "product_information_sheet",
+      "page_start": 6,
+      "page_end": 14,
+      "product_name": "my:Optima Secure",
+      "text_layer": "present",
+      "ocr_used": false
+    },
+    {
+      "segment_id": "s7",
+      "type": "addon_information_sheet",
+      "page_start": 15,
+      "page_end": 18,
+      "product_name": "Unlimited Restore",
+      "text_layer": "present",
+      "ocr_used": false
+    }
+  ],
+  "policy": {
+    "insurer": {
+      "status": "found",
+      "value": "HDFC ERGO General Insurance Company Limited",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "HDFC ERGO General Insurance Company Limited",
+          "segment_id": "s1"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "product_name": {
+      "status": "found",
+      "value": "my:Optima Secure",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "my:Optima Secure",
+          "segment_id": "s3"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "policy_number": {
+      "status": "found",
+      "value": "[REDACTED]",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "[REDACTED]",
+          "segment_id": "s3"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "policy_type": {
+      "status": "found",
+      "value": "individual",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Policy Type : Individual",
+          "segment_id": "s3"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "premium_tier": {
+      "status": "found",
+      "value": "Tier2",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Premium Tier : Tier2",
+          "segment_id": "s3"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "period_from": {
+      "status": "found",
+      "value": "2026-04-03",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "From 03/04/2026 00:00 hrs",
+          "segment_id": "s3"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "period_to": {
+      "status": "found",
+      "value": "2027-04-02",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "To 02/04/2027 Midnight",
+          "segment_id": "s3"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "is_renewal": {
+      "status": "found",
+      "value": true,
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Renewal : YES",
+          "segment_id": "s3"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "first_policy_inception_date": {
+      "status": "found",
+      "value": "2023-04-03",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "03/04/2023",
+          "segment_id": "s3"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "premium_frequency": {
+      "status": "found",
+      "value": "SINGLE",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Premium Frequency : SINGLE",
+          "segment_id": "s3"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    }
+  },
+  "policyholder": {
+    "id": "ph1",
+    "role": "policyholder",
+    "name": {
+      "status": "found",
+      "value": "[REDACTED]",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "[REDACTED]",
+          "segment_id": "s3"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    }
+  },
+  "insured_persons": [
+    {
+      "person": {
+        "id": "ins1",
+        "role": "insured",
+        "name": {
+          "status": "found",
+          "value": "[REDACTED]",
+          "evidence": [
+            {
+              "page": 2,
+              "quote": "[REDACTED]",
+              "segment_id": "s3"
+            }
+          ],
+          "confidence": "high",
+          "method": "rule"
+        },
+        "relationship_to_policyholder": {
+          "status": "found",
+          "value": "Self",
+          "evidence": [
+            {
+              "page": 2,
+              "quote": "Self",
+              "segment_id": "s3"
+            }
+          ],
+          "confidence": "high",
+          "method": "rule"
+        }
+      },
+      "sum_insured": {
+        "structure": {
+          "status": "found",
+          "value": "individual",
+          "evidence": [
+            {
+              "page": 4,
+              "quote": "Individual Policy*",
+              "segment_id": "s4"
+            }
+          ],
+          "confidence": "high",
+          "method": "rule"
+        },
+        "base": {
+          "status": "found",
+          "value": {
+            "amount": 2000000,
+            "currency": "INR"
+          },
+          "evidence": [
+            {
+              "page": 4,
+              "quote": "Year (in Lakh) 2000000",
+              "segment_id": "s4"
+            }
+          ],
+          "confidence": "high",
+          "method": "rule"
+        },
+        "plus_benefit": {
+          "held": {
+            "status": "found",
+            "value": true,
+            "evidence": [
+              {
+                "page": 4,
+                "quote": "Plus Benefit Bonus of 50% of the Base Sum Insured, maximum upto 100%.",
+                "clause": "4.4",
+                "segment_id": "s4"
+              }
+            ],
+            "confidence": "high",
+            "method": "rule"
+          },
+          "rule": {
+            "status": "found",
+            "value": "Bonus of 50% of the Base Sum Insured, maximum upto 100%.",
+            "evidence": [
+              {
+                "page": 4,
+                "quote": "Bonus of 50% of the Base Sum Insured, maximum upto 100%.",
+                "clause": "4.4",
+                "segment_id": "s4"
+              }
+            ],
+            "confidence": "high",
+            "method": "rule"
+          }
+        },
+        "secure_benefit": {
+          "held": {
+            "status": "found",
+            "value": true,
+            "evidence": [
+              {
+                "page": 4,
+                "quote": "Secure Benefit Equal to 100% of Base sum insured",
+                "clause": "4.5",
+                "segment_id": "s4"
+              }
+            ],
+            "confidence": "high",
+            "method": "rule"
+          },
+          "rule": {
+            "status": "found",
+            "value": "Equal to 100% of Base sum insured",
+            "evidence": [
+              {
+                "page": 4,
+                "quote": "Equal to 100% of Base sum insured",
+                "clause": "4.5",
+                "segment_id": "s4"
+              }
+            ],
+            "confidence": "high",
+            "method": "rule"
+          }
+        },
+        "restore": {
+          "type": {
+            "status": "found",
+            "value": "automatic_and_unlimited",
+            "evidence": [
+              {
+                "page": 4,
+                "quote": "Automatic Restore Benefit Equal to 100% of Base sum insured",
+                "clause": "4.6",
+                "segment_id": "s4"
+              }
+            ],
+            "confidence": "high",
+            "method": "rule"
+          },
+          "percent_of_base": {
+            "status": "found",
+            "value": 100,
+            "evidence": [
+              {
+                "page": 4,
+                "quote": "Automatic Restore Benefit Equal to 100% of Base sum insured",
+                "clause": "4.6",
+                "segment_id": "s4"
+              }
+            ],
+            "confidence": "high",
+            "method": "rule"
+          }
+        },
+        "cumulative_bonus": {
+          "applicable": {
+            "status": "found",
+            "value": false,
+            "evidence": [
+              {
+                "page": 4,
+                "quote": "Cumulative Bonus Not Covered",
+                "clause": "3.8",
+                "segment_id": "s4"
+              }
+            ],
+            "confidence": "high",
+            "method": "rule"
+          },
+          "rule": {
+            "status": "found",
+            "value": "Applicable only to Optima Suraksha plan",
+            "evidence": [
+              {
+                "page": 6,
+                "quote": "Applicable only to Optima Suraksha plan",
+                "clause": "B-1.8",
+                "segment_id": "s6"
+              }
+            ],
+            "confidence": "high",
+            "method": "rule"
+          }
+        },
+        "aggregate_deductible": {
+          "status": "found",
+          "value": {
+            "amount": 0,
+            "currency": "INR"
+          },
+          "evidence": [
+            {
+              "page": 4,
+              "quote": "Aggregate Deductible (Optional) 0",
+              "clause": "4.7",
+              "segment_id": "s4"
+            }
+          ],
+          "confidence": "high",
+          "method": "rule"
+        },
+        "combined_cover_stated_in_document": {
+          "status": "found",
+          "value": false,
+          "evidence": [
+            {
+              "page": 4,
+              "quote": "Bonus of 50% of the Base Sum Insured, maximum upto 100%.",
+              "segment_id": "s4"
+            }
+          ],
+          "confidence": "verify",
+          "method": "llm"
+        },
+        "combined_cover_text": {
+          "status": "not_mentioned",
+          "value": null
+        }
+      },
+      "first_inception_date": {
+        "status": "found",
+        "value": "2023-04-03",
+        "evidence": [
+          {
+            "page": 2,
+            "quote": "03/04/2023",
+            "segment_id": "s3"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "nominee": {
+        "id": "nom1",
+        "role": "nominee",
+        "name": {
+          "status": "found",
+          "value": "[REDACTED]",
+          "evidence": [
+            {
+              "page": 2,
+              "quote": "[REDACTED]",
+              "segment_id": "s3"
+            }
+          ],
+          "confidence": "high",
+          "method": "rule"
+        }
+      }
+    }
+  ],
+  "coverage": {
+    "benefits": [
+      {
+        "id": "hospitalization",
+        "name": "Hospitalization expenses",
+        "category": "hospitalization",
+        "availability_in_product": "base",
+        "schedule_status": "held",
+        "user_has": "yes",
+        "limit": {
+          "kind": "up_to_sum_insured"
+        },
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Hospitalization Expenses Covered",
+            "clause": "3.1",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document",
+        "clause_ref": "3.1",
+        "plain_summary": {
+          "en": "In-patient hospital stays are covered up to your sum insured."
+        }
+      },
+      {
+        "id": "room-rent",
+        "name": "Room rent",
+        "category": "room_rent",
+        "availability_in_product": "base",
+        "schedule_status": "held",
+        "user_has": "yes",
+        "limit": {
+          "kind": "as_actuals"
+        },
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Room Rent At actuals",
+            "clause": "3.1",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document",
+        "clause_ref": "3.1",
+        "plain_summary": {
+          "en": "No per-day room rent cap is shown on your schedule."
+        }
+      },
+      {
+        "id": "pre-hosp",
+        "name": "Pre-hospitalization",
+        "category": "pre_hospitalization",
+        "availability_in_product": "base",
+        "schedule_status": "held",
+        "user_has": "yes",
+        "limit": {
+          "kind": "max_days",
+          "max_days": 60
+        },
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Pre-Hospitalization 60 days",
+            "clause": "3.5",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document",
+        "clause_ref": "3.5"
+      },
+      {
+        "id": "post-hosp",
+        "name": "Post-hospitalization",
+        "category": "post_hospitalization",
+        "availability_in_product": "base",
+        "schedule_status": "held",
+        "user_has": "yes",
+        "limit": {
+          "kind": "max_days",
+          "max_days": 180
+        },
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Post-Hospitalization 180 days",
+            "clause": "3.6",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document",
+        "clause_ref": "3.6"
+      },
+      {
+        "id": "dental",
+        "name": "Dental treatment",
+        "category": "dental",
+        "availability_in_product": "base",
+        "schedule_status": "held",
+        "user_has": "yes",
+        "limit": {
+          "kind": "up_to_sum_insured"
+        },
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Dental Treatment Covered upto sum insured",
+            "clause": "3.1.1.b",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document",
+        "clause_ref": "3.1.1.b"
+      },
+      {
+        "id": "plastic-surgery",
+        "name": "Plastic surgery",
+        "category": "plastic_surgery",
+        "availability_in_product": "base",
+        "schedule_status": "held",
+        "user_has": "yes",
+        "limit": {
+          "kind": "up_to_sum_insured"
+        },
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Plastic surgery Covered upto sum insured",
+            "clause": "3.1.1.c",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document",
+        "clause_ref": "3.1.1.c",
+        "plain_summary": {
+          "en": "Listed as covered, but see the cosmetic surgery exclusion for the limits."
+        }
+      },
+      {
+        "id": "protect-benefit",
+        "name": "Protect Benefit (non-medical items)",
+        "category": "non_medical_protect",
+        "availability_in_product": "optional",
+        "schedule_status": "held",
+        "user_has": "yes",
+        "limit": {
+          "kind": "up_to_sum_insured"
+        },
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Protect Benefit Covered upto sum insured",
+            "clause": "4.3",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document",
+        "clause_ref": "4.3",
+        "plain_summary": {
+          "en": "Pays for items normally treated as non-medical, as listed in Annexure B of the policy wording."
+        }
+      },
+      {
+        "id": "air-ambulance",
+        "name": "Emergency air ambulance",
+        "category": "emergency_air_ambulance",
+        "availability_in_product": "optional",
+        "schedule_status": "held",
+        "user_has": "yes",
+        "limit": {
+          "kind": "fixed_amount",
+          "amount": {
+            "amount": 500000,
+            "currency": "INR"
+          }
+        },
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Emergency Air Ambulance Covered Up to 500000",
+            "clause": "4.1",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document",
+        "clause_ref": "4.1"
+      },
+      {
+        "id": "shared-room-cash",
+        "name": "Daily cash for shared accommodation",
+        "category": "shared_room_daily_cash",
+        "availability_in_product": "optional",
+        "schedule_status": "held",
+        "user_has": "yes",
+        "limit": {
+          "kind": "per_day",
+          "per_day_amount": {
+            "amount": 800,
+            "currency": "INR"
+          },
+          "max_total": {
+            "amount": 4800,
+            "currency": "INR"
+          }
+        },
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Daily Cash for choosing Shared Accommodation 800 per day max upto 4800",
+            "clause": "4.2",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document",
+        "clause_ref": "4.2"
+      },
+      {
+        "id": "e-opinion",
+        "name": "E-opinion for critical illness",
+        "category": "e_opinion",
+        "availability_in_product": "optional",
+        "schedule_status": "held",
+        "user_has": "yes",
+        "limit": {
+          "kind": "none_stated",
+          "basis_text": "In India"
+        },
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "E-Opinion for Critical Illness In India",
+            "clause": "4.8",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document",
+        "clause_ref": "4.8"
+      },
+      {
+        "id": "preventive-checkup",
+        "name": "Preventive health check-up",
+        "category": "preventive_checkup",
+        "availability_in_product": "base",
+        "schedule_status": "held",
+        "user_has": "yes",
+        "limit": {
+          "kind": "fixed_amount",
+          "amount": {
+            "amount": 5000,
+            "currency": "INR"
+          }
+        },
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Individual Policy* 5000",
+            "clause": "3",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document",
+        "clause_ref": "3"
+      },
+      {
+        "id": "cumulative-bonus",
+        "name": "Cumulative bonus",
+        "category": "cumulative_bonus",
+        "availability_in_product": "base",
+        "schedule_status": "not_held",
+        "user_has": "no",
+        "limit": {
+          "kind": "none_stated"
+        },
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Cumulative Bonus Not Covered",
+            "clause": "3.8",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document",
+        "clause_ref": "3.8",
+        "plain_summary": {
+          "en": "The product sheet describes this bonus, but it applies only to a different plan. You do not have it."
+        }
+      },
+      {
+        "id": "overseas-travel",
+        "name": "Overseas Travel Secure",
+        "category": "overseas_travel",
+        "availability_in_product": "optional",
+        "schedule_status": "not_held",
+        "user_has": "no",
+        "limit": {
+          "kind": "none_stated"
+        },
+        "evidence": [
+          {
+            "page": 2,
+            "quote": "2000000 0 2000000 Yes No",
+            "segment_id": "s3"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document"
+      },
+      {
+        "id": "critical-illness",
+        "name": "Critical illness add-on",
+        "category": "critical_illness",
+        "availability_in_product": "add_on",
+        "schedule_status": "not_held",
+        "user_has": "no",
+        "limit": {
+          "kind": "none_stated"
+        },
+        "evidence": [
+          {
+            "page": 2,
+            "quote": "0 No Female 0 0 0 0 N 0",
+            "segment_id": "s3"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document",
+        "plain_summary": {
+          "en": "Sum insured shows 0: this lump-sum cover was not bought."
+        }
+      },
+      {
+        "id": "hospital-cash",
+        "name": "Hospital cash benefit add-on",
+        "category": "hospital_cash",
+        "availability_in_product": "add_on",
+        "schedule_status": "not_held",
+        "user_has": "no",
+        "limit": {
+          "kind": "none_stated"
+        },
+        "evidence": [
+          {
+            "page": 2,
+            "quote": "0 No Female 0 0 0 0 N 0",
+            "segment_id": "s3"
+          }
+        ],
+        "confidence": "high",
+        "origin": "document"
+      }
+    ],
+    "add_ons": [
+      {
+        "id": "unlimited-restore",
+        "name": "Unlimited Restore",
+        "held": {
+          "status": "found",
+          "value": true,
+          "evidence": [
+            {
+              "page": 15,
+              "quote": "Unlimited Restore - Instant addition of 100% Basic Sum Insured on",
+              "segment_id": "s7"
+            }
+          ],
+          "confidence": "high",
+          "method": "rule"
+        },
+        "summary": {
+          "en": "Your sum insured is topped up again after it is used."
+        }
+      },
+      {
+        "id": "ipa-rider",
+        "name": "Personal accident (IPA) rider",
+        "held": {
+          "status": "found",
+          "value": false,
+          "evidence": [
+            {
+              "page": 2,
+              "quote": "0 No Female 0 0 0 0 N 0",
+              "segment_id": "s3"
+            }
+          ],
+          "confidence": "high",
+          "method": "rule"
+        }
+      }
+    ],
+    "scope": {
+      "pre_hospitalization_days": {
+        "status": "found",
+        "value": 60,
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Pre-Hospitalization 60 days",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "post_hospitalization_days": {
+        "status": "found",
+        "value": 180,
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Post-Hospitalization 180 days",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "minimum_hospitalization_hours": {
+        "status": "found",
+        "value": 24,
+        "evidence": [
+          {
+            "page": 6,
+            "quote": "Admission in Hospital for minimum 24 hours",
+            "clause": "B-1.1",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      }
+    }
+  },
+  "waiting_periods": {
+    "initial": {
+      "days": {
+        "status": "found",
+        "value": 30,
+        "evidence": [
+          {
+            "page": 11,
+            "quote": "Initial waiting Period: 30 days for all illnesses (not applicable in case",
+            "clause": "C.1.c",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "not_applicable_on_continuous_renewal": {
+        "status": "found",
+        "value": true,
+        "evidence": [
+          {
+            "page": 11,
+            "quote": "of continuous renewal or accidents)",
+            "clause": "C.1.c",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "not_applicable_for_accidents": {
+        "status": "found",
+        "value": true,
+        "evidence": [
+          {
+            "page": 11,
+            "quote": "of continuous renewal or accidents)",
+            "clause": "C.1.c",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      }
+    },
+    "specific_diseases": {
+      "months": {
+        "status": "found",
+        "value": 24,
+        "evidence": [
+          {
+            "page": 11,
+            "quote": "24 months for listed diseases/procedure",
+            "clause": "C.1.b",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      }
+    },
+    "pre_existing": {
+      "months": {
+        "status": "found",
+        "value": 36,
+        "evidence": [
+          {
+            "page": 11,
+            "quote": "Pre-existing diseases: Covered after 36 months",
+            "clause": "C.1.c",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      }
+    },
+    "per_insured_status": [
+      {
+        "insured_id": "ins1",
+        "initial": "waived",
+        "specific": "waived",
+        "pre_existing": "waived",
+        "evidence": [
+          {
+            "page": 2,
+            "quote": "Waived Waived Waived",
+            "segment_id": "s3"
+          }
+        ]
+      }
+    ],
+    "fresh_waiting_on_enhanced_sum_insured": {
+      "status": "found",
+      "value": true,
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "fresh waiting period (s) shall apply on enhanced sum insured.",
+          "segment_id": "s3"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "continuity": {
+      "renewal_continuity": {
+        "status": "found",
+        "value": true,
+        "evidence": [
+          {
+            "page": 2,
+            "quote": "Renewal Continuity Benefits",
+            "segment_id": "s3"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      }
+    },
+    "moratorium": {
+      "months": {
+        "status": "found",
+        "value": 60,
+        "evidence": [
+          {
+            "page": 14,
+            "quote": "After completion of sixty continuous months of coverage",
+            "clause": "D.1.6",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "summary": {
+        "en": "After 60 continuous months, the insurer cannot contest claims for non-disclosure, except in proven fraud."
+      }
+    }
+  },
+  "exclusions": [
+    {
+      "id": "opd",
+      "kind": "general",
+      "category": "outpatient",
+      "title": {
+        "en": "Outpatient treatment"
+      },
+      "summary": {
+        "en": "Doctor visits and tests that do not involve admission are not covered."
+      },
+      "out_of_pocket_impact": "full",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "Treatment taken on outpatient basis.",
+          "clause": "C.2.l",
+          "segment_id": "s6"
+        }
+      ],
+      "confidence": "high",
+      "clause_ref": "C.2.l"
+    },
+    {
+      "id": "non-medical",
+      "kind": "general",
+      "category": "non_medical_items",
+      "title": {
+        "en": "Non-medical items"
+      },
+      "summary": {
+        "en": "Items such as food (other than the patient diet), laundry and attendant charges are normally excluded."
+      },
+      "out_of_pocket_impact": "partial",
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "Non-Medical expenses such as food charges (other than patient’s diet provided by hospital), laundry charges, attendant",
+          "clause": "C.2.k",
+          "segment_id": "s6"
+        }
+      ],
+      "confidence": "high",
+      "clause_ref": "C.2.k",
+      "overridden_by_benefit_ids": [
+        "protect-benefit"
+      ]
+    },
+    {
+      "id": "cosmetic",
+      "kind": "general",
+      "category": "cosmetic_plastic",
+      "title": {
+        "en": "Cosmetic or plastic surgery"
+      },
+      "summary": {
+        "en": "Surgery to change appearance is excluded unless needed after an accident, burn or cancer, or certified as medically necessary."
+      },
+      "out_of_pocket_impact": "depends",
+      "evidence": [
+        {
+          "page": 8,
+          "quote": "Expenses for cosmetic or plastic surgery or any treatment to change appearance unless for reconstruction following an Accident, Burn(s) or Cancer",
+          "clause": "C.1.h",
+          "segment_id": "s6"
+        }
+      ],
+      "confidence": "high",
+      "code": "Excl08",
+      "clause_ref": "C.1.h",
+      "exceptions": [
+        {
+          "condition": {
+            "en": "Reconstruction after an accident, burn or cancer, or medically necessary and certified by the doctor."
+          },
+          "evidence": [
+            {
+              "page": 8,
+              "quote": "unless for reconstruction following an Accident, Burn(s) or Cancer",
+              "clause": "C.1.h",
+              "segment_id": "s6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "maternity",
+      "kind": "general",
+      "category": "maternity",
+      "title": {
+        "en": "Maternity"
+      },
+      "summary": {
+        "en": "Childbirth and related hospital costs are not covered, except ectopic pregnancy."
+      },
+      "out_of_pocket_impact": "full",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "Medical treatment expenses traceable to childbirth(including",
+          "clause": "C.1.r",
+          "segment_id": "s6"
+        }
+      ],
+      "confidence": "high",
+      "code": "Excl18",
+      "clause_ref": "C.1.r"
+    },
+    {
+      "id": "infertility",
+      "kind": "general",
+      "category": "infertility",
+      "title": {
+        "en": "Infertility and assisted reproduction"
+      },
+      "summary": {
+        "en": "Infertility treatment, including IVF, is not covered."
+      },
+      "out_of_pocket_impact": "full",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "Expenses related to sterility and infertility.",
+          "clause": "C.1.q",
+          "segment_id": "s6"
+        }
+      ],
+      "confidence": "high",
+      "code": "Excl17",
+      "clause_ref": "C.1.q"
+    },
+    {
+      "id": "diagnostics-only",
+      "kind": "general",
+      "category": "diagnostics_only",
+      "title": {
+        "en": "Admission only for tests"
+      },
+      "summary": {
+        "en": "A hospital stay mainly for tests or evaluation is not covered."
+      },
+      "out_of_pocket_impact": "full",
+      "evidence": [
+        {
+          "page": 7,
+          "quote": "Expenses related to any admission primarily for diagnostics and evaluation purposes only are excluded.",
+          "clause": "C.1.d",
+          "segment_id": "s6"
+        }
+      ],
+      "confidence": "high",
+      "code": "Excl04",
+      "clause_ref": "C.1.d"
+    },
+    {
+      "id": "excluded-providers",
+      "kind": "general",
+      "category": "excluded_providers",
+      "title": {
+        "en": "Excluded hospitals or doctors"
+      },
+      "summary": {
+        "en": "Treatment at providers on the insurer's excluded list is not payable, except stabilisation in a life-threatening emergency or after an accident."
+      },
+      "out_of_pocket_impact": "full",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "Expenses incurred towards treatment in any hospital or by any Medical Practitioner or any other provider specifically excluded by the Insurer",
+          "clause": "C.1.k",
+          "segment_id": "s6"
+        }
+      ],
+      "confidence": "high",
+      "code": "Excl11",
+      "clause_ref": "C.1.k",
+      "exceptions": [
+        {
+          "condition": {
+            "en": "Life-threatening emergency or accident: costs up to stabilisation are payable, not the full claim."
+          },
+          "evidence": [
+            {
+              "page": 9,
+              "quote": "expenses up to the stage of stabilization are payable but not the complete claim.",
+              "clause": "C.1.k",
+              "segment_id": "s6"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "financial_terms": {
+    "room_rent": {
+      "basis": {
+        "status": "found",
+        "value": "at_actuals",
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Room Rent At actuals",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "proportionate_deduction_applies": {
+        "status": "not_mentioned",
+        "value": null
+      }
+    },
+    "co_payment": {
+      "percent": {
+        "status": "not_mentioned",
+        "value": null
+      }
+    },
+    "sub_limits": [],
+    "aggregate_deductible": {
+      "status": "found",
+      "value": {
+        "amount": 0,
+        "currency": "INR"
+      },
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "Aggregate Deductible (Optional) 0",
+          "segment_id": "s4"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "per_claim_deductible": {
+      "status": "not_applicable",
+      "value": null
+    },
+    "preventive_checkup": {
+      "amount": {
+        "status": "found",
+        "value": {
+          "amount": 5000,
+          "currency": "INR"
+        },
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Individual Policy* 5000",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      }
+    },
+    "non_medical_expenses": {
+      "excluded_by_default": {
+        "status": "found",
+        "value": true,
+        "evidence": [
+          {
+            "page": 10,
+            "quote": "Non-Medical expenses such as food charges",
+            "clause": "C.2.k",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "reduced_by_protect_benefit": {
+        "status": "found",
+        "value": true,
+        "evidence": [
+          {
+            "page": 4,
+            "quote": "Protect Benefit Covered upto sum insured",
+            "clause": "4.3",
+            "segment_id": "s4"
+          }
+        ],
+        "confidence": "medium",
+        "method": "llm"
+      }
+    }
+  },
+  "premium": {
+    "base_premium": {
+      "status": "found",
+      "value": {
+        "amount": 29350,
+        "currency": "INR"
+      },
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Base Premium (A) 29350",
+          "segment_id": "s3"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "total_before_discount": {
+      "status": "found",
+      "value": {
+        "amount": 29350,
+        "currency": "INR"
+      },
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Total Premium (E) = A+B+C+D 29350",
+          "segment_id": "s3"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "discounts": {
+      "total": {
+        "status": "found",
+        "value": {
+          "amount": 0,
+          "currency": "INR"
+        },
+        "evidence": [
+          {
+            "page": 2,
+            "quote": "Total Discount (F) 0",
+            "segment_id": "s3"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      }
+    },
+    "total_payable": {
+      "status": "found",
+      "value": {
+        "amount": 29497,
+        "currency": "INR"
+      },
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Total Premium (E-F) 29497",
+          "segment_id": "s3"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "amount_on_tax_certificate": {
+      "status": "found",
+      "value": {
+        "amount": 29497,
+        "currency": "INR"
+      },
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "This is to certify that we have received an amount of",
+          "segment_id": "s2"
+        }
+      ],
+      "confidence": "medium",
+      "method": "rule"
+    },
+    "arithmetic_check": {
+      "consistent": false,
+      "expected_total": {
+        "amount": 29350,
+        "currency": "INR"
+      },
+      "stated_total": {
+        "amount": 29497,
+        "currency": "INR"
+      },
+      "difference": {
+        "amount": 147,
+        "currency": "INR"
+      },
+      "origin": "computed"
+    }
+  },
+  "claims": {
+    "cashless": {
+      "preauth_decision_hours": {
+        "status": "found",
+        "value": 1,
+        "evidence": [
+          {
+            "page": 12,
+            "quote": "Decision on cashless authorization to be provided within 1 hour from the time of receipt of request.",
+            "clause": "E",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "final_bill_decision_hours": {
+        "status": "found",
+        "value": 3,
+        "evidence": [
+          {
+            "page": 12,
+            "quote": "Within 3 hours of the receipt of discharge authorization request from the hospital.",
+            "clause": "E",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "network_list_url": {
+        "status": "found",
+        "value": "https://www.hdfcergo.com/locators/cashless-hospitals-networks",
+        "evidence": [
+          {
+            "page": 12,
+            "quote": "https://www.hdfcergo.com/locators/cashless-hospitals-networks",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "excluded_hospitals_list_url": {
+        "status": "found",
+        "value": "https://www.hdfcergo.com/docs/default-source/documents/excluded-hospital1.pdf",
+        "evidence": [
+          {
+            "page": 12,
+            "quote": "https://www.hdfcergo.com/docs/default-source/documents/excluded-hospital1.pdf",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "card_required_at_admission": {
+        "status": "found",
+        "value": true,
+        "evidence": [
+          {
+            "page": 5,
+            "quote": "at the time of admission/availing",
+            "segment_id": "s5"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "card_guarantees_cashless": {
+        "status": "found",
+        "value": false,
+        "evidence": [
+          {
+            "page": 5,
+            "quote": "guarantee cashless hospitalization or any other",
+            "segment_id": "s5"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      }
+    },
+    "reimbursement": {
+      "settlement_days_after_last_document": {
+        "status": "found",
+        "value": 30,
+        "evidence": [
+          {
+            "page": 12,
+            "quote": "TAT for Claim settlement – 30 days from the time the last necessary document is received.",
+            "clause": "E",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "extended_days_if_verification": {
+        "status": "found",
+        "value": 45,
+        "evidence": [
+          {
+            "page": 12,
+            "quote": "the final stand will be confirmed within 45 days from the time the last necessary document is received by us",
+            "clause": "E",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      }
+    },
+    "contacts": {
+      "helplines": {
+        "status": "found",
+        "value": [
+          "022 6234 6234",
+          "0120 6234 6234"
+        ],
+        "evidence": [
+          {
+            "page": 5,
+            "quote": "Customer Service No : 022 - 6234 6234 / 0120 - 6234 6234",
+            "segment_id": "s5"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      }
+    }
+  },
+  "conditions": {
+    "free_look": {
+      "days": {
+        "status": "found",
+        "value": 30,
+        "evidence": [
+          {
+            "page": 13,
+            "quote": "You may cancel the insurance policy if you do not want it, within 30",
+            "clause": "D.1.8",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "applies_to_renewals": {
+        "status": "found",
+        "value": false,
+        "evidence": [
+          {
+            "page": 13,
+            "quote": "The Free Look Period shall be applicable on new individual health insurance policies and not on renewals",
+            "clause": "D.1.8",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      }
+    },
+    "migration": {
+      "apply_at_least_days_before_renewal": {
+        "status": "found",
+        "value": 30,
+        "evidence": [
+          {
+            "page": 13,
+            "quote": "applying for Migration of the policy atleast 30 days before the policy renewal date",
+            "clause": "D.1.10",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      }
+    },
+    "portability": {
+      "earliest_days_before_renewal": {
+        "status": "found",
+        "value": 60,
+        "evidence": [
+          {
+            "page": 14,
+            "quote": "at least 45 days before, but not earlier than 60 days from the policy renewal date",
+            "clause": "D.1.11",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "latest_days_before_renewal": {
+        "status": "found",
+        "value": 45,
+        "evidence": [
+          {
+            "page": 14,
+            "quote": "at least 45 days before, but not earlier than 60 days from the policy renewal date",
+            "clause": "D.1.11",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      }
+    },
+    "sum_insured_changes": {
+      "only_at_renewal": {
+        "status": "found",
+        "value": true,
+        "evidence": [
+          {
+            "page": 14,
+            "quote": "Sum Insured can be changed (increased/ decreased) only at the time of renewal, subject to underwriting by the company.",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      },
+      "fresh_waiting_on_increase": {
+        "status": "found",
+        "value": true,
+        "evidence": [
+          {
+            "page": 14,
+            "quote": "For increase in SI, the waiting period if any shall start afresh only for the enhanced portion of the sum insured.",
+            "segment_id": "s6"
+          }
+        ],
+        "confidence": "high",
+        "method": "rule"
+      }
+    }
+  },
+  "grievance": {
+    "email": {
+      "status": "found",
+      "value": "grievance@hdfcergo.com",
+      "evidence": [
+        {
+          "page": 13,
+          "quote": "E-mail: grievance@hdfcergo.com",
+          "clause": "D.1.17",
+          "segment_id": "s6"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "ombudsman_url": {
+      "status": "found",
+      "value": "https://bimabharosa.irdai.gov.in/",
+      "evidence": [
+        {
+          "page": 13,
+          "quote": "Ombudsman: https://bimabharosa.irdai.gov.in/.",
+          "clause": "D.1.17",
+          "segment_id": "s6"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    }
+  },
+  "tax_certificate": {
+    "section": {
+      "status": "found",
+      "value": "80D",
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "Certificate for the purpose of deduction under section 80 D of Income Tax Act, 1961",
+          "segment_id": "s2"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    },
+    "amount": {
+      "status": "found",
+      "value": {
+        "amount": 29497,
+        "currency": "INR"
+      },
+      "evidence": [
+        {
+          "page": 1,
+          "quote": "This is to certify that we have received an amount of",
+          "segment_id": "s2"
+        }
+      ],
+      "confidence": "medium",
+      "method": "rule"
+    }
+  },
+  "health_card": {
+    "present": true,
+    "valid_from": {
+      "status": "found",
+      "value": "2026-04-03",
+      "evidence": [
+        {
+          "page": 5,
+          "quote": "Valid From: 03/04/2026",
+          "segment_id": "s5"
+        }
+      ],
+      "confidence": "high",
+      "method": "rule"
+    }
+  },
+  "derived": {
+    "as_of_date": "2026-10-13",
+    "policy_end_date": {
+      "value": "2027-04-02",
+      "formula": "policy.period_to",
+      "inputs": [
+        "/policy/period_to"
+      ],
+      "confidence": "verify"
+    },
+    "next_renewal_due": {
+      "value": "2027-04-03",
+      "formula": "policy.period_to + 1 day",
+      "inputs": [
+        "/policy/period_to"
+      ],
+      "confidence": "verify"
+    },
+    "days_to_renewal": 172,
+    "portability_window_opens": {
+      "value": "2027-02-02",
+      "formula": "renewal - 60 days",
+      "inputs": [
+        "/policy/period_to",
+        "/conditions/portability/earliest_days_before_renewal"
+      ],
+      "confidence": "verify"
+    },
+    "portability_window_closes": {
+      "value": "2027-02-17",
+      "formula": "renewal - 45 days",
+      "inputs": [
+        "/policy/period_to",
+        "/conditions/portability/latest_days_before_renewal"
+      ],
+      "confidence": "verify"
+    },
+    "migration_apply_by": {
+      "value": "2027-03-04",
+      "formula": "renewal - 30 days",
+      "inputs": [
+        "/policy/period_to",
+        "/conditions/migration/apply_at_least_days_before_renewal"
+      ],
+      "confidence": "verify"
+    },
+    "free_look_ends": {
+      "value": null,
+      "formula": "not applicable on renewals",
+      "inputs": [
+        "/conditions/free_look/applies_to_renewals"
+      ],
+      "confidence": "verify"
+    },
+    "specific_waiting_ends": {
+      "value": "2025-04-03",
+      "formula": "first_policy_inception + 24 months",
+      "inputs": [
+        "/policy/first_policy_inception_date"
+      ],
+      "confidence": "verify",
+      "note": "Schedule shows waived; shown only for reference."
+    },
+    "pre_existing_waiting_ends": {
+      "value": "2026-04-03",
+      "formula": "first_policy_inception + 36 months",
+      "inputs": [
+        "/policy/first_policy_inception_date"
+      ],
+      "confidence": "verify",
+      "note": "Schedule shows waived; shown only for reference."
+    },
+    "moratorium_ends": {
+      "value": "2028-04-03",
+      "formula": "first_policy_inception + 60 months",
+      "inputs": [
+        "/policy/first_policy_inception_date",
+        "/waiting_periods/moratorium/months"
+      ],
+      "confidence": "verify",
+      "note": "Counted from first inception, assuming continuous cover."
+    },
+    "calendar_events": [
+      {
+        "title": {
+          "en": "Portability window opens",
+          "hi": "पोर्टेबिलिटी विंडो शुरू"
+        },
+        "date": "2027-02-02",
+        "kind": "portability",
+        "approximate": true
+      },
+      {
+        "title": {
+          "en": "Portability window closes",
+          "hi": "पोर्टेबिलिटी विंडो बंद"
+        },
+        "date": "2027-02-17",
+        "kind": "portability",
+        "approximate": true
+      },
+      {
+        "title": {
+          "en": "Last day to apply for migration"
+        },
+        "date": "2027-03-04",
+        "kind": "migration",
+        "approximate": true
+      },
+      {
+        "title": {
+          "en": "Policy renewal due",
+          "hi": "पॉलिसी रिन्यूअल"
+        },
+        "date": "2027-04-03",
+        "kind": "renewal",
+        "approximate": true
+      },
+      {
+        "title": {
+          "en": "Moratorium period ends"
+        },
+        "date": "2028-04-03",
+        "kind": "moratorium",
+        "approximate": true
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "premium-mismatch",
+      "type": "inconsistency",
+      "severity": "warning",
+      "title": {
+        "en": "Premium figures do not add up",
+        "hi": "प्रीमियम के आंकड़े मेल नहीं खाते"
+      },
+      "detail": {
+        "en": "The schedule shows a total of 29,350 with zero discounts, but the final premium and tax certificate show 29,497. The 147 difference is not explained on the document."
+      },
+      "related_paths": [
+        "/premium"
+      ],
+      "suggested_question_for_insurer": {
+        "en": "What does the extra 147 in the premium consist of?"
+      },
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Total Premium (E) = A+B+C+D 29350",
+          "segment_id": "s3"
+        },
+        {
+          "page": 2,
+          "quote": "Total Premium (E-F) 29497",
+          "segment_id": "s3"
+        }
+      ],
+      "origin": "computed"
+    },
+    {
+      "id": "waived-waiting-caveat",
+      "type": "caveat",
+      "severity": "notice",
+      "title": {
+        "en": "Waiting periods show as waived, with one caveat"
+      },
+      "detail": {
+        "en": "Your schedule shows waiting periods waived. The same page says fresh waiting periods apply to any increased sum insured. Check whether your sum insured was increased."
+      },
+      "related_paths": [
+        "/waiting_periods"
+      ],
+      "suggested_question_for_insurer": {
+        "en": "Do any waiting periods apply to the part of my cover added since I first bought the policy?"
+      },
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "fresh waiting period (s) shall apply on enhanced sum insured.",
+          "segment_id": "s3"
+        }
+      ],
+      "origin": "document"
+    },
+    {
+      "id": "plastic-surgery-tension",
+      "type": "tension_between_sections",
+      "severity": "notice",
+      "title": {
+        "en": "Plastic surgery is both 'covered' and 'excluded'"
+      },
+      "detail": {
+        "en": "The schedule of benefits lists plastic surgery as covered, while the exclusions list cosmetic surgery unless it follows an accident, burn or cancer, or is medically necessary. Treat it as covered only in those cases."
+      },
+      "related_paths": [
+        "/coverage/benefits/5",
+        "/exclusions/2"
+      ],
+      "evidence": [
+        {
+          "page": 4,
+          "quote": "Plastic surgery Covered upto sum insured",
+          "clause": "3.1.1.c",
+          "segment_id": "s4"
+        },
+        {
+          "page": 8,
+          "quote": "unless for reconstruction following an Accident, Burn(s) or Cancer",
+          "clause": "C.1.h",
+          "segment_id": "s6"
+        }
+      ],
+      "origin": "document"
+    },
+    {
+      "id": "non-medical-overridden",
+      "type": "exclusion_overridden",
+      "severity": "info",
+      "title": {
+        "en": "Non-medical items: excluded, but you have the Protect Benefit"
+      },
+      "detail": {
+        "en": "Non-medical items are excluded by default, but your schedule includes Protect Benefit, which pays for items on the insurer's list. Items not on that list stay your cost."
+      },
+      "related_paths": [
+        "/exclusions/1",
+        "/coverage/benefits/6"
+      ],
+      "evidence": [
+        {
+          "page": 10,
+          "quote": "Non-Medical expenses such as food charges",
+          "clause": "C.2.k",
+          "segment_id": "s6"
+        },
+        {
+          "page": 4,
+          "quote": "Protect Benefit Covered upto sum insured",
+          "clause": "4.3",
+          "segment_id": "s4"
+        }
+      ],
+      "origin": "document"
+    },
+    {
+      "id": "not-bought-addons",
+      "type": "missing_information",
+      "severity": "info",
+      "title": {
+        "en": "Add-ons described in the product sheet that you did not buy"
+      },
+      "detail": {
+        "en": "Critical illness, hospital cash, personal accident and overseas travel cover are described in the product documents, but your schedule shows none of them. Cumulative bonus applies only to a different plan."
+      },
+      "related_paths": [
+        "/coverage/benefits"
+      ],
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "0 No Female 0 0 0 0 N 0",
+          "segment_id": "s3"
+        },
+        {
+          "page": 4,
+          "quote": "Cumulative Bonus Not Covered",
+          "clause": "3.8",
+          "segment_id": "s4"
+        }
+      ],
+      "origin": "document"
+    }
+  ],
+  "out_of_pocket_map": [
+    {
+      "scenario": "non_network_hospital",
+      "risk": "high",
+      "headline": {
+        "en": "Outside the network, you usually pay first",
+        "hi": "नेटवर्क के बाहर पहले खुद भुगतान करना पड़ सकता है"
+      },
+      "explanation": {
+        "en": "Cashless works only at network hospitals. Elsewhere you pay the bill and claim reimbursement; the policy gives 30 days from the last document (up to 45 with verification)."
+      },
+      "items": [
+        {
+          "label": {
+            "en": "Pay the hospital, then claim back admissible costs"
+          },
+          "impact": "pay_first_then_claim",
+          "evidence": [
+            {
+              "page": 12,
+              "quote": "TAT for Claim settlement – 30 days from the time the last necessary document is received.",
+              "clause": "E",
+              "segment_id": "s6"
+            }
+          ],
+          "origin": "document"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "scenario": "excluded_provider",
+      "risk": "high",
+      "headline": {
+        "en": "Some hospitals and doctors are on an excluded list"
+      },
+      "explanation": {
+        "en": "Treatment there is normally not payable at all. The exception is a life-threatening emergency or an accident, where costs up to stabilisation are payable, not the full claim."
+      },
+      "items": [
+        {
+          "label": {
+            "en": "Check the insurer's excluded list before planned treatment"
+          },
+          "impact": "not_payable",
+          "exclusion_ids": [
+            "excluded-providers"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "quote": "expenses up to the stage of stabilization are payable but not the complete claim.",
+              "clause": "C.1.k",
+              "segment_id": "s6"
+            }
+          ],
+          "origin": "document"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "scenario": "cashless_not_approved",
+      "risk": "medium",
+      "headline": {
+        "en": "Even at a network hospital, cashless is not guaranteed"
+      },
+      "explanation": {
+        "en": "Your health card says it does not guarantee cashless treatment. The insurer states it decides pre-authorisation within 1 hour and the final bill within 3 hours of the hospital's request."
+      },
+      "items": [
+        {
+          "label": {
+            "en": "Cashless can be declined; you may then pay and claim"
+          },
+          "impact": "pay_first_then_claim",
+          "evidence": [
+            {
+              "page": 5,
+              "quote": "guarantee cashless hospitalization or any other",
+              "segment_id": "s5"
+            }
+          ],
+          "origin": "document"
+        }
+      ],
+      "confidence": "high",
+      "general_guidance": [
+        {
+          "en": "Ask the hospital's insurance desk for the approved amount and a list of non-payable items before admission."
+        }
+      ]
+    },
+    {
+      "scenario": "not_covered_at_all",
+      "risk": "high",
+      "headline": {
+        "en": "Some treatments are not covered"
+      },
+      "explanation": {
+        "en": "Examples from your policy: outpatient treatment, maternity, infertility, admissions only for tests, and cosmetic surgery (with exceptions)."
+      },
+      "items": [
+        {
+          "label": {
+            "en": "Outpatient treatment"
+          },
+          "impact": "not_payable",
+          "exclusion_ids": [
+            "opd"
+          ],
+          "evidence": [
+            {
+              "page": 10,
+              "quote": "Treatment taken on outpatient basis.",
+              "clause": "C.2.l",
+              "segment_id": "s6"
+            }
+          ],
+          "origin": "document"
+        },
+        {
+          "label": {
+            "en": "Maternity"
+          },
+          "impact": "not_payable",
+          "exclusion_ids": [
+            "maternity"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "quote": "except ectopic pregnancy;",
+              "clause": "C.1.r",
+              "segment_id": "s6"
+            }
+          ],
+          "origin": "document"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "scenario": "covered_but_not_full_bill",
+      "risk": "medium",
+      "headline": {
+        "en": "A covered stay can still leave you with some costs"
+      },
+      "explanation": {
+        "en": "The insurer pays only admissible, reasonable and medically necessary charges. Non-medical items are excluded by default, but your Protect Benefit covers items on the insurer's list."
+      },
+      "items": [
+        {
+          "label": {
+            "en": "Non-medical items on the insurer's list"
+          },
+          "impact": "partly_payable",
+          "benefit_ids": [
+            "protect-benefit"
+          ],
+          "exclusion_ids": [
+            "non-medical"
+          ],
+          "evidence": [
+            {
+              "page": 4,
+              "quote": "Protect Benefit Covered upto sum insured",
+              "clause": "4.3",
+              "segment_id": "s4"
+            }
+          ],
+          "origin": "document"
+        }
+      ],
+      "confidence": "high",
+      "example": {
+        "is_illustrative": true,
+        "text": {
+          "en": "Illustration only: on a 5,00,000 bill, if 40,000 is judged non-admissible, you would pay 40,000 yourself."
+        }
+      }
+    },
+    {
+      "scenario": "limits_reduce_payout",
+      "risk": "low",
+      "headline": {
+        "en": "No deductible or room rent cap is shown"
+      },
+      "explanation": {
+        "en": "Your schedule shows a zero aggregate deductible and room rent at actuals. No co-payment is mentioned in the documents provided."
+      },
+      "items": [
+        {
+          "label": {
+            "en": "Aggregate deductible: 0"
+          },
+          "impact": "no_extra_cost",
+          "evidence": [
+            {
+              "page": 4,
+              "quote": "Aggregate Deductible (Optional) 0",
+              "clause": "4.7",
+              "segment_id": "s4"
+            }
+          ],
+          "origin": "document"
+        },
+        {
+          "label": {
+            "en": "Room rent: at actuals"
+          },
+          "impact": "no_extra_cost",
+          "benefit_ids": [
+            "room-rent"
+          ],
+          "evidence": [
+            {
+              "page": 4,
+              "quote": "Room Rent At actuals",
+              "clause": "3.1",
+              "segment_id": "s4"
+            }
+          ],
+          "origin": "document"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "scenario": "waiting_period",
+      "risk": "low",
+      "headline": {
+        "en": "Waiting periods are shown as waived"
+      },
+      "explanation": {
+        "en": "Your schedule shows the 30-day, 24-month and 36-month waiting periods as waived. Check the caveat about any increased sum insured."
+      },
+      "items": [
+        {
+          "label": {
+            "en": "Waived on your schedule"
+          },
+          "impact": "no_extra_cost",
+          "evidence": [
+            {
+              "page": 2,
+              "quote": "Waived Waived Waived",
+              "segment_id": "s3"
+            }
+          ],
+          "origin": "document"
+        }
+      ],
+      "confidence": "high"
+    }
+  ]
+}
